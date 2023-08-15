@@ -1,3 +1,4 @@
 dataframeのデータ追加においてappendはpandas(2.0.0)で削除
 代わりにpandas.concat()を使用
+race_graph_df = pd.concat([race_graph_df, df_race], ignore_index=True)
 https://pandas.pydata.org/pandas-docs/stable/whatsnew/v1.4.0.html#deprecated-dataframe-append-and-series-append

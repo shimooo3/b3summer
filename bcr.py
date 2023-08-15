@@ -1,7 +1,6 @@
 # ライブラリのインポート
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import os
 import random
 import time
@@ -43,7 +42,6 @@ horse_info.append(random_select(horse_number, lane_size))
 horse_info.append(random_select(horse_name, lane_size))
 horse_info.append(random_select(horse_power, lane_size))
 horse_info.append(random_select(tension, lane_size))
-print(len(horse_info))
 
 # レーンに配置する
 horse_info_size = len(horse_info)
@@ -53,7 +51,6 @@ for a in range(lane_size):
 
 # 出馬表を出力する
 print("--出馬表を表示します--")
-print("lane", " num", "name", "power", "tension")
 for a in range(lane_size):
     print('lane'+str(a+1)+":",end=" ")
     for b in range(horse_info_size):
@@ -86,26 +83,14 @@ length_lest = []
 for a in range(lane_size):
     length_lest.append(length)
 
+# レースを開始する
 print("レースを開始します")
-goal_min = float('inf')  # 最初に無限大で初期化
+goal_min = 1
+race_graph_df = pd.DataFrame(columns=horse_info[0])
+
 race_finish = False
-win_lane = 0
-
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.set_ylim(-1, lane_size)
-ax.set_xlim(0, length)
-ax.set_yticks(range(lane_size))
-ax.set_yticklabels(horse_name)
-ax.set_xlabel("Remaining Distance")
-
-bars = ax.barh(range(lane_size), length_lest, tick_label=horse_name)
-
-def update(frame):
-    global win_lane, goal_min  # グローバル変数を使用することを明示
-
-    if min(length_lest) <= 0:
-        ani.event_source.stop()  # グラフの描画を停止
-
+# 1位が決まるまで繰り返す
+while(race_finish == False):
     for i in range(lane_size):
         if length_lest[i] > 0:
             tension_factor = 1.0
@@ -117,33 +102,51 @@ def update(frame):
                 tension_factor = 0.9
             elif horse_info[3][i] == 'worst':
                 tension_factor = 0.8
+        
+        
+        # ゴールしているレーンはスキップ
+        length_lest[i] -= round(random.uniform(1, 10) * tension_factor)
+        length_lest[i] -= horse_info[2][i]
+        
 
-            length_lest[i] -= round(random.uniform(1, 10) * tension_factor)
-            length_lest[i] -= horse_info[2][i]
+        #グラフ用にデータフレームとして保存しておく
+        df_race = pd.DataFrame(data=[length_lest], columns=horse_info[0])
+        race_graph_df = pd.concat([race_graph_df, df_race], ignore_index=True)
 
-        bars[i].set_width(length - length_lest[i])
-
+        # ゴールした時
         if (length_lest[i] <= 0) and (goal_min > length_lest[i]):
             win_lane = i
             goal_min = length_lest[i]
+            race_finish = True
 
-    return bars
-
-ani = FuncAnimation(fig, update, frames=None, blit=True, interval=10)
-
-plt.title("Race Animation")
-plt.ylabel("Horses")
-plt.xlabel("Remaining Distance")
-plt.show()
-
+# レース結果を表示する
 print("--レース結果--")
 print("1着: "+str(lane_info[win_lane][0]))
 print("--------------")
 
+# 進んだ距離
+race_add = length - race_graph_df
+race_add = race_add.astype(int)
+
+import bar_chart_race as bcr
+bcr.bar_chart_race(df=race_add, sort='desc')
+    
+
+# レースのグラフを表示する
+cmap = plt.get_cmap('tab10')
+plt.figure(figsize=[9,5])
+plt.plot(race_add)
+plt.title("Race Result")
+plt.xlabel("Time")
+plt.ylabel("Length advanced")
+plt.show()
+
+# 金額変動を判定する
 if predict == lane_info[win_lane][0]:
     money = int(money + stakes*odds[win_lane])
 print("結果: "+str(start_money)+" → "+str(money))
 
+# 終了処理
 print("3秒後に終了します")
 time.sleep(3)
 os.system('cls')
