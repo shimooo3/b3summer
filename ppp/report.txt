@@ -2,3 +2,7 @@ dataframeのデータ追加においてappendはpandas(2.0.0)で削除
 代わりにpandas.concat()を使用
 race_graph_df = pd.concat([race_graph_df, df_race], ignore_index=True)
 https://pandas.pydata.org/pandas-docs/stable/whatsnew/v1.4.0.html#deprecated-dataframe-append-and-series-append
+
+csv出力の際には文字コードのエンコーディングを明示的に指定する　cp932とか分けわかめ
+df.isnull().sum()により欠損値を確認　着差タイムに欠損値が多い
+
