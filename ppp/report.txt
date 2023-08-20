@@ -3,6 +3,17 @@ dataframeのデータ追加においてappendはpandas(2.0.0)で削除
 race_graph_df = pd.concat([race_graph_df, df_race], ignore_index=True)
 https://pandas.pydata.org/pandas-docs/stable/whatsnew/v1.4.0.html#deprecated-dataframe-append-and-series-append
 
+G1,G2 2023-2014のデータを使用
 csv出力の際には文字コードのエンコーディングを明示的に指定する　cp932とか分けわかめ
 df.isnull().sum()により欠損値を確認　着差タイムに欠損値が多い
+騎手名をダミー変数化することも考えたが騎手が多く変数が増えすぎるため断念
+ダミー変数　騎手名を適当な数値データに置き換える　男0,女1
+性齢を性別と年齢の変数に分割
+3着以下は賞金が出ず価値が等しいため一律で0に置き換えた
+レース毎に賞金額が異なり賞金が着順予想に与える影響の変化が大きいため賞金を削除
+タイム情報があれば着差情報は不要では　調教師、馬番の影響は少ない
+タイムではなく着順の予想のため分類タスクとして実施
+3着以下のデータが多いためアンダーサンプリング
+3着以内:4着以下 = 1:2
+
 
