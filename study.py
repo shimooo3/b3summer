@@ -136,6 +136,8 @@ plt.ylabel("Horses")
 plt.xlabel("Remaining Distance")
 plt.show()
 
+plt.close()
+
 print("--レース結果--")
 print("1着: "+str(lane_info[win_lane][0]))
 print("--------------")
