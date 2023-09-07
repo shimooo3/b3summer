@@ -23,8 +23,8 @@ def append_2Dlist(all, num, size):
 
 def display_race():
     global money
-    output_text.delete("1.0", tk.END)  # Clear previous output
-    money =int(money_entry.get())  # Get the input from the entry widget
+    output_text.delete("1.0", tk.END)  
+    money =int(money_entry.get())
     try:
         start_money = money
     except ValueError:
@@ -50,7 +50,6 @@ def display_race():
         lane_info.append(append_2Dlist(horse_info, a, horse_info_size))
     
     output_text.insert(tk.END, "所持金: {}円\n".format(start_money))    
-    # Display the race information
     output_text.insert(tk.END, "--出馬表を表示します--\n")
     output_text.insert(tk.END, "lane num name power tension\n")
     for a in range(lane_size):
@@ -74,7 +73,6 @@ def display_race():
     predict_entry = tk.Entry(root)
     predict_entry.pack()
 
-    # Entry widget for placing stakes
     stakes_label = tk.Label(root, text="賭ける金額[円]:")
     stakes_label.pack()
     stakes_entry = tk.Entry(root)
@@ -104,7 +102,7 @@ def display_race():
         bars = ax.barh(range(lane_size), length_lest, tick_label=horse_name)
         
         def update(frame):
-            global win_lane, goal_min  # グローバル変数を使用することを明示
+            global win_lane, goal_min
             
             for i in range(lane_size):
                 if length_lest[i] > 0:
@@ -151,7 +149,6 @@ def display_race():
             win_name = "horseD"
         else:
             win_name = "horseE"
-        # Display race result and update money
         output_text.insert(tk.END, "--レース結果--\n")
         output_text.insert(tk.END, "1着: " + win_name + "\n")
         output_text.insert(tk.END, "--------------\n")
@@ -163,7 +160,6 @@ def display_race():
         output_text.insert(tk.END, "結果: "+str(start_money)+" → "+str(money)+ "\n")
         output_text.insert(tk.END, "----------------------\n")
     
-    # Button to place the start_race
     start_race_button = tk.Button(root, text="レースを開始", command=start_race)
     start_race_button.pack()
     
@@ -191,17 +187,14 @@ for a in range(lane_size):
 root = tk.Tk()
 root.title("競馬シミュレータ")
 
-# Entry widget for money input
 money_label = tk.Label(root, text="所持金[円]:")
 money_label.pack()
 money_entry = tk.Entry(root)
 money_entry.pack()
 
-# Button to display the race information
 display_button = tk.Button(root, text="レース情報", command=display_race)
 display_button.pack()
 
-# Text widget for displaying the race information
 output_text = tk.Text(root)
 output_text.pack()
 
