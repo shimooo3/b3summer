@@ -1,4 +1,6 @@
 # b3summer  
+### シミュレータ
+* sim_gui.py　tkinterを使用した
 ### /predict
 **生成された.csv,.txtは適宜必要な階層に配置してください**
 #### 1, get_url.pyの実行  
