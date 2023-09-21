@@ -22,10 +22,13 @@ params = {
     'objective': 'multiclass',
     'num_class': 4,
     'metric': 'multi_logloss',
-    'verbose': 1
+    'verbose': 1,
+    'max_bin': 300,
+    'num_leaves': 63,
+    'learnig_rate': 0.01
 }
 
-model = lgb.train(params, train_data, num_boost_round=100, valid_sets=[train_data, test_data], early_stopping_rounds=10)
+model = lgb.train(params, train_data, num_boost_round=100, valid_sets=[train_data, test_data],callbacks=[lgb.early_stopping(stopping_rounds=10)])
 
 y_pred = model.predict(x_test)
 y_pred_class = y_pred.argmax(axis=1)
