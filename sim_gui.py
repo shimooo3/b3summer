@@ -131,9 +131,9 @@ def display_race():
             return bars
         
         ani = FuncAnimation(fig, update, frames=None, blit=True, interval=10)
-        plt.title("Race Animation")
+        plt.title("Race")
         plt.ylabel("Horses")
-        plt.xlabel("Remaining Distance")
+        plt.xlabel("Distance")
         plt.show()
 
         plt.close()

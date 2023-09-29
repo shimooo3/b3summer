@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import lightgbm as lgb
 from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
-from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE  # Import SMOTE
 
 df = pd.read_csv("data/train/train.csv")
 df.drop(columns=['馬名', '騎手'], inplace=True)
@@ -10,18 +10,14 @@ df.drop(columns=['馬名', '騎手'], inplace=True)
 x = df.drop('着順', axis=1)
 y = df['着順']
 
-# クラス0、1、2、3の各サンプル数
-class_counts = [579, 579, 579, 579]
-
-target_ratios = [4, 1, 1, 1]
 
 # 各クラスに対する目標サンプル数を計算
-target_samples = [count * ratio for count, ratio in zip(class_counts, target_ratios)]
+target_samples = [6808, 6808, 6808, 6808]
 
-# RandomUnderSamplerを初期化
-under_sampler = RandomUnderSampler(sampling_strategy=dict(zip(range(4), target_samples)), random_state=0)
-# under_sampler = RandomUnderSampler(sampling_strategy='auto', random_state=0)
-x_resampled, y_resampled = under_sampler.fit_resample(x, y)
+# SMOTEを初期化
+smote = SMOTE(sampling_strategy=dict(zip(range(4), target_samples)), random_state=0)
+x_resampled, y_resampled = smote.fit_resample(x, y)
+print(x_resampled.head())
 print(y_resampled.value_counts())
 
 x_train, x_test, y_train, y_test = train_test_split(x_resampled, y_resampled, test_size=0.2, random_state=0)
@@ -35,10 +31,10 @@ params = {
     'verbose': 1,
     'max_bin': 300,
     'num_leaves': 63,
-    'learnig_rate': 0.01
+    'learning_rate': 0.01  # Fix the typo in 'learning_rate'
 }
 
-model = lgb.train(params, train_data, num_boost_round=100, valid_sets=[train_data, test_data],callbacks=[lgb.early_stopping(stopping_rounds=10)])
+model = lgb.train(params, train_data, num_boost_round=100, valid_sets=[train_data, test_data], callbacks=[lgb.early_stopping(stopping_rounds=10)])
 
 y_pred = model.predict(x_test)
 y_pred_class = y_pred.argmax(axis=1)
