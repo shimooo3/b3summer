@@ -1,4 +1,7 @@
-# b3summer  
+## minelab_2024summer
+SIGNATEの練習問題用です
+
+## b3summer  
 ### シミュレータ
 * sim_gui.py　tkinterを使用した
 ### /predict
